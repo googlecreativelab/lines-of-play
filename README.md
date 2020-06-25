@@ -13,7 +13,7 @@ Players can use *Lines of Play* to rapidly create and modify lines, rings, paths
 
 **_Coming Soon to the Play Store_**:
 
-[<img alt="Get it on Google Play" height="50px" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" />]('')
+<img alt="Get it on Google Play" height="50px" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" />
 
 This app was developed in the Unity Editor and written in C# using the MonoDevelop framework.  
 
