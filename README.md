@@ -5,7 +5,7 @@
 
 Unlike previous mobile AR applications limited to horizontal and vertical object placement, AR Core's [__Depth API__](https://developers.googleblog.com/2019/12/blending-realities-with-arcore-depth-api.html) allows game objects to interact with real objects in the player’s environment with near surface-level resolution. 
 
-<img alt="LinesofPlay" height="600px" src="https://github.com/googlecreativelab/lines-of-play/blob/master/Images/LOP_HERO_IMG_1920x1080.jpg?raw=true" />
+<img alt="LinesofPlay" src="https://github.com/googlecreativelab/lines-of-play/blob/master/Images/LOP_HERO_IMG_1920x1080.jpg?raw=true" />
 
 Features of the player’s environment provide  constraints (*on __collision__*) and serve as visual obstructions (*__occlusion__*). 
 
