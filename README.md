@@ -5,7 +5,7 @@
 
 Unlike previous mobile AR applications limited to horizontal and vertical object placement, AR Core's [__Depth API__](https://developers.googleblog.com/2019/12/blending-realities-with-arcore-depth-api.html) allows game objects to interact with real objects in the player’s environment with near surface-level resolution. 
 
-<img alt="LinesofPlay" src="https://github.com/googlecreativelab/lines-of-play/blob/master/Images/LOP_HERO_IMG_1920x1080.jpg?raw=true" />
+[<img alt="LinesofPlay" src="https://github.com/googlecreativelab/lines-of-play/blob/master/Images/LOP_HERO_IMG_1920x1080.jpg?raw=true" />](https://play.google.com/store/apps/details?id=com.arexperiments.dominoes)
 
 Features of the player’s environment provide  constraints (*on __collision__*) and serve as visual obstructions (*__occlusion__*). 
 
@@ -13,7 +13,7 @@ Players can use *Lines of Play* to rapidly create and modify lines, rings, paths
 
 **_Coming Soon to the Play Store_**:
 
-<img alt="Get it on Google Play" height="50px" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" />
+[<img alt="Get it on Google Play" height="50px" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" />](https://play.google.com/store/apps/details?id=com.arexperiments.dominoes)
 
 This app was developed in the Unity Editor and written in C# using the MonoDevelop framework.  
 
@@ -103,7 +103,7 @@ We encourage open sourcing projects as a way of learning from each other. Please
 
 ## Contributors
 <a name="contributors"></a>
-[Jasmine Roberts](https://www.github.com/jasmineroberts)
+Built by [Jasmine Roberts](https://www.github.com/jasmineroberts) at the Google Creative Lab. 
 
 ## License
 [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0)
