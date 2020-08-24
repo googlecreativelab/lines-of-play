@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using GoogleARCore.Examples.Common;
 using GoogleARCore.Examples.HelloAR;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,7 +54,7 @@ public class MainController : MonoBehaviour
     public GameObject dominoSmall;
     public GameObject dominoBig;
 
-    public PlaneDiscoveryGuide discoveryGuide;
+    //public PlaneDiscoveryGuide discoveryGuide;
     public GameObject mainCanvas;
 
     [Range(0, 255)]

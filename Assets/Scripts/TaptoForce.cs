@@ -38,7 +38,7 @@ public class TaptoForce : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (hit.transform.gameObject.CompareTag("Plane"))
+                if (hit.transform.gameObject.CompareTag("DetectedPlane"))
                 {
                     // Instantiate(Domino, hit.point, Quaternion.identity);
                     //GameObject dominoPrefab =  Instantiate(Domino, hit.point, Quaternion.identity);

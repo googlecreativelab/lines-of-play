@@ -301,6 +301,7 @@ public class TwoPointSpawner : MonoBehaviour
             Destroy(PointB.gameObject);
         }
         points.Clear();
+        balloonPlacing.DespawnAll(balloonPlacing.pooledObjectUsed);
         balloonPlacing.count = 0;
     }
     public void LineToggle()

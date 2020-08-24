@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,6 +34,7 @@ public class DominoPlacing : MonoBehaviour
     public int count = 0;
     TwoPointSpawner pointSpwaner;
     public MainController mainController;
+    public static event Action onPlacedObject;
     // Start is called before the first frame update
     void Start()
     {
@@ -84,6 +86,12 @@ public class DominoPlacing : MonoBehaviour
                    
                     if (pointSpwaner.isDefault)
                     {
+
+                        if (onPlacedObject != null)
+                        {
+                            onPlacedObject();
+                        }
+
                         GameObject dominoSpawned = Instantiate(prefab, reticle.transform.position, reticle.transform.rotation);
                         dominoSpawned.GetComponent<SwitchOnRandomDomino>().colorID = colorID;
                         mainController.AddDomino(dominoSpawned);

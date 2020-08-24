@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using GoogleARCore.Examples.Common;
-using GoogleARCore.Examples.HelloAR;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -98,7 +96,7 @@ public class ObjectTracker : MonoBehaviour
             print(detectedPlaneGenerator.transform.GetChild(i).GetComponent<MeshRenderer>().enabled);
         }
 
-        detectedPlaneGenerator.GetComponent<DetectedPlaneGenerator>().ShowPlane = planeState;
+        //detectedPlaneGenerator.GetComponent<DetectedPlaneGenerator>().ShowPlane = planeState;
     }
 
     public void ClearAll()
@@ -124,7 +122,7 @@ public class ObjectTracker : MonoBehaviour
     public void SelectionToggle()
     {
         isSelecting = !isSelecting;
-        GetComponent<HelloARController>().enabled = isSelecting;
+        //GetComponent<HelloARController>().enabled = isSelecting;
         if (isSelecting)
         {
             SelectToggleBtn.GetComponentInChildren<Text>().text = "Spwan";

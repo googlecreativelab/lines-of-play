@@ -117,6 +117,8 @@ public class Paintable : MonoBehaviour
             prev = curr;
         }
 
+        if (curr != null)
+            curr.transform.rotation = mainController.dominos[mainController.dominos.Count-2].transform.rotation;
         DeletePrefabs();
     }
 

@@ -17,26 +17,29 @@ limitations under the License.
 namespace GoogleARCore.Examples.HelloAR
 {
     using System.Collections.Generic;
-    using GoogleARCore;
-    using GoogleARCore.Examples.Common;
+    //using GoogleARCore;
+    //using GoogleARCore.Examples.Common;
     using UnityEngine;
     using UnityEngine.EventSystems;
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
 
-        using Input = InstantPreviewInput;
-#endif
+//        using Input = InstantPreviewInput;
+//#endif
 
     /// <summary>
     /// Controls the HelloAR example.
     /// </summary>
     public class DominoARController : MonoBehaviour
     {
+
+        /*
         /// <summary>
         /// The first-person camera being used to render the passthrough camera image (i.e. AR
         /// background).
         /// </summary>
-        public Camera FirstPersonCamera;
+        public Camera FirstPersonCamera
+            ;
 
         /// <summary>
         /// A prefab to place when a raycast from a user touch hits a vertical plane.
@@ -249,6 +252,6 @@ namespace GoogleARCore.Examples.HelloAR
                     toastObject.Call("show");
                 }));
             }
-        }
+        }*/
     }
 }

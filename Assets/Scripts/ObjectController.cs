@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using GoogleARCore.Examples.ObjectManipulation;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,7 +41,7 @@ public class ObjectController : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (hit.transform.gameObject.CompareTag("Plane"))
+                if (hit.transform.gameObject.CompareTag("DetectedPlane"))
                 {
                     Instantiate(Domino, hit.point, Quaternion.identity);
 
@@ -60,12 +59,12 @@ public class ObjectController : MonoBehaviour
 
     public void SetPlaneObject()
     {
-        GetComponent<PawnManipulator>().PawnPrefab = Plane;
+        //GetComponent<PawnManipulator>().PawnPrefab = Plane;
     }
     public void SetDominoObject()
     {
        // GetComponent<PawnManipulator>().enabled = false;
-        GetComponent<PawnManipulator>().PawnPrefab = Domino;
+        //GetComponent<PawnManipulator>().PawnPrefab = Domino;
     }
 
 }

@@ -92,7 +92,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &637276645084833550
 Transform:
   m_ObjectHideFlags: 0
@@ -129,10 +129,11 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1543111f52ced4f468b402fcf46b850a, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -140,6 +141,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -289,20 +291,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37369a4ef203fd14799e2fc571007287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4947482739760161328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7403691127614666844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da3e4985fe542445c814ca78b87e6b9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseSparseDepth: 0
-  ReprojectIntermediateSparseDepth: 1
 --- !u!1001 &7403691127614701308
 PrefabInstance:
   m_ObjectHideFlags: 0
