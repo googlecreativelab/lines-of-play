@@ -67,16 +67,16 @@ A depth map is created by taking multiple images from different angles and compa
 2. Download or clone this repository
 3. Add project in Unity Hubs and open project
 4. In Files ▸ Build Settings, Switch build target from `PC, Mac and Linux Standalone` to `iOS`
-8. Navigate to Edit ▸ Project Settings ▸ Player ▸ Other Settings
+5. Navigate to Edit ▸ Project Settings ▸ Player ▸ Other Settings
 * Set string for `Camera Usage Description`
 * Enable `Requires ARKit support`
 * Set Target device to `iPhone + iPad`
 * Set Target minimum iOS version to `11.0`
 * Change architecture to `ARM64`
 * Set unique names for *Product Name* and *Package Name*
-9. In Player ▸ XR Plug-in Management check `ARKit` for Plug-in Providers
-5. Navigate to File ▸ Build Settings, make sure `Scene/MainScene` is checked in *Scenes in Build* queue
-6. `Build` application and open .xsproj file in XCode to [build](https://docs.unity3d.com/Manual/UnityCloudBuildiOS.html).
+6. In Player ▸ XR Plug-in Management check `ARKit` for Plug-in Providers
+7. Navigate to File ▸ Build Settings, make sure `Scene/MainScene` is checked in *Scenes in Build* queue
+8. `Build` application and open .xsproj file in XCode to [build](https://docs.unity3d.com/Manual/UnityCloudBuildiOS.html).
 
 ### Android troubleshooting for Unity
 [Click here for troubleshooting help](https://developers.google.com/ar/develop/unity/quickstart-android). Also refer to the [Unity developer documentation](https://docs.unity3d.com/2018.4/Documentation/Manual/android-BuildProcess.html)
