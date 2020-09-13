@@ -2,9 +2,9 @@
 # _Lines of Play_ – an AR Experiment with Dominoes
 
 <p float="center">
-  <img src="images/lines_dominoes.gif" width="33.0%" />
-  <img src="images/circle_dominoes.gif" width="33.0%" /> 
-  <img src="images/jumbo_domino.gif" width="33.0%" />
+  <img src="Images/lines_dominoes.gif" width="33.0%" />
+  <img src="Images/circle_dominoes.gif" width="33.0%" /> 
+  <img src="Images/jumbo_domino.gif" width="33.0%" />
 </p>
 
 **_Lines of Play_ is a domino AR experiment built with Unity highlighting recent advancements in [ARCore](https://github.com/google-ar/arcore-unity-sdk). Unlike previous mobile AR applications limited to horizontal and vertical object placement, AR Core's [__Depth API__](https://developers.googleblog.com/2019/12/blending-realities-with-arcore-depth-api.html) allows game objects to interact with real objects in the player’s environment with near surface-level resolution.**
