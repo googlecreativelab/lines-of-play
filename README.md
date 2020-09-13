@@ -5,10 +5,10 @@
 
 Unlike previous mobile AR applications limited to horizontal and vertical object placement, AR Core's [__Depth API__](https://developers.googleblog.com/2019/12/blending-realities-with-arcore-depth-api.html) allows game objects to interact with real objects in the player’s environment with near surface-level resolution.
 
-<p float="left">
-  <img src="Images/lines_dominoes.gif" width="260" />
-  <img src="Images/circle_dominoes.gif" width="260" /> 
-  <img src="Images/jumbo_domino.gif" width="260" />
+<p float="center">
+  <img src="Images/lines_dominoes.gif" width="32%" />
+  <img src="Images/circle_dominoes.gif" width="32%" /> 
+  <img src="Images/jumbo_domino.gif" width="32%" />
 </p>
 
 Features of the player’s environment provide  constraints (*on __collision__*) and serve as visual obstructions (*__occlusion__*).
@@ -19,8 +19,7 @@ Players can use *Lines of Play* to rapidly create and modify lines, rings, paths
 
 This app was developed in the Unity Editor and written in C# using the MonoDevelop framework and using ARFoundation. ARFoundation allows build to target both capable iOS and Android devices.
 
-For a list of supported Android devices, check [here](https://developers.google.com/ar/discover/supported-devices). Supported iOS devices include 2020 (2nd Generation) iPad Pros with LiDAR scanning
-
+For a list of supported Android devices, check [here](https://developers.google.com/ar/discover/supported-devices); for supported iOS devices and more information check [here](https://developer.apple.com/documentation/arkit/world_tracking/visualizing_and_interacting_with_a_reconstructed_scene).
 
 ## Contents
 
