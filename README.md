@@ -6,9 +6,9 @@
 Unlike previous mobile AR applications limited to horizontal and vertical object placement, AR Core's [__Depth API__](https://developers.googleblog.com/2019/12/blending-realities-with-arcore-depth-api.html) allows game objects to interact with real objects in the player’s environment with near surface-level resolution.
 
 <p float="left">
-  <img src="Images/lines_dominoes.gif" width="250" />
-  <img src="Images/circle_dominoes.gif" width="250" /> 
-  <img src="Images/jumbo_domino.gif" width="250" />
+  <img src="Images/lines_dominoes.gif" width="260" />
+  <img src="Images/circle_dominoes.gif" width="260" /> 
+  <img src="Images/jumbo_domino.gif" width="260" />
 </p>
 
 Features of the player’s environment provide  constraints (*on __collision__*) and serve as visual obstructions (*__occlusion__*).
