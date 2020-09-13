@@ -1,19 +1,15 @@
-# *Lines of Play* - an AR Experiment with Dominoes
 
-
-**_Lines of Play_**  is a domino AR Android application built with Unity highlighting recent advancements in [ARCore](https://github.com/google-ar/arcore-unity-sdk).
-
-Unlike previous mobile AR applications limited to horizontal and vertical object placement, AR Core's [__Depth API__](https://developers.googleblog.com/2019/12/blending-realities-with-arcore-depth-api.html) allows game objects to interact with real objects in the player’s environment with near surface-level resolution.
+# _Lines of Play_ – an AR Experiment with Dominoes
 
 <p float="center">
-  <img src="Images/lines_dominoes.gif" width="32%" />
-  <img src="Images/circle_dominoes.gif" width="32%" /> 
-  <img src="Images/jumbo_domino.gif" width="32%" />
+  <img src="images/lines_dominoes.gif" width="33.0%" />
+  <img src="images/circle_dominoes.gif" width="33.0%" /> 
+  <img src="images/jumbo_domino.gif" width="33.0%" />
 </p>
 
-Features of the player’s environment provide  constraints (*on __collision__*) and serve as visual obstructions (*__occlusion__*).
+**_Lines of Play_ is a domino AR experiment built with Unity highlighting recent advancements in [ARCore](https://github.com/google-ar/arcore-unity-sdk). Unlike previous mobile AR applications limited to horizontal and vertical object placement, AR Core's [__Depth API__](https://developers.googleblog.com/2019/12/blending-realities-with-arcore-depth-api.html) allows game objects to interact with real objects in the player’s environment with near surface-level resolution.**
 
-Players can use *Lines of Play* to rapidly create and modify lines, rings, paths, and turns of domino tiles.
+Features of the player’s environment provide  constraints (*on __collision__*) and serve as visual obstructions (*__occlusion__*). Players can use *Lines of Play* to rapidly create and modify lines, rings, paths, and turns of domino tiles.
 
 [<img alt="Get it on Google Play" height="50px" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge-border.png" />](https://play.google.com/store/apps/details?id=com.arexperiments.dominoes)
 
@@ -49,21 +45,21 @@ A depth map is created by taking multiple images from different angles and compa
 ### For Android
 1. Before building and running the app, ensure [AR is enabled](https://play.google.com/store/apps/details?id=com.google.ar.core&hl=en) on your device.
 2. During download, install `Android Build Support`.
-4. Install `Android SDK & NDK` Tools and `Open JDK`.
-5. Download or clone this repository
-6. Add project in Unity Hubs and open project
-7. In Files ▸ Build Settings, Switch build target from `PC, Mac and Linux Standalone` to `Android`
-8. Navigate to Edit ▸ Project Settings ▸ Player ▸ Other Settings
+3. Install `Android SDK & NDK` Tools and `Open JDK`.
+4. Download or clone this repository
+5. Add project in Unity Hubs and open project
+6. In Files ▸ Build Settings, Switch build target from `PC, Mac and Linux Standalone` to `Android`
+7. Navigate to Edit ▸ Project Settings ▸ Player ▸ Other Settings
 * Turn off `Multithreaded Rendering`
 * Change color space from `Gamma` to `Linear`
 * Turn off `Autographics API`
 * Enable `Open GLES3`
 * Set to minimum API level to `Android 9.0 (Pie)` API level 24 or higher
 * Set unique names for *Product Name* and *Package Name*
-9. In Player ▸ XR Settings check `ARCore supported`
-10. Connect device and allow for USB debugging
-11. Navigate to File ▸ Build Settings, make sure `Scene/MainScene` is checked in *Scenes in Build* queue
-12. `Build and Run` application.
+8. In Player ▸ XR Settings check `ARCore supported`
+9. Connect device and allow for USB debugging
+10. Navigate to File ▸ Build Settings, make sure `Scene/MainScene` is checked in *Scenes in Build* queue
+11. `Build and Run` application.
 
 ### For iOS
 1. During download, install `iOS Build Support`.
