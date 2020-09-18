@@ -35,7 +35,7 @@ public class UIManagerStart : MonoBehaviour
     void Start()
     {
         StartCoroutine(Transition());
-
+        PlayerPrefs.DeleteAll();
     }
 
     IEnumerator Transition()

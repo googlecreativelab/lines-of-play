@@ -18,6 +18,7 @@ using GoogleARCore.Examples.HelloAR;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MainController : MonoBehaviour
@@ -27,19 +28,15 @@ public class MainController : MonoBehaviour
     public DeleteDomino deleteDomino;
     public TaptoForce taptoForce;
     public Text text;
+    public GameObject remove_info;
     public GameObject coloringPanel;
     public GameObject placementBtn;
     public GameObject coloringBtn;
-    public GameObject toppleBtn;
-    public GameObject eraseBtn;
+    public GameObject ButtonTopple;
     public Sprite[] colors;
     public Image colorIndicator;
     public DominoARController dominoARController;
     public GameObject balloonReticle;
-    public GameObject LineBtn;
-    public GameObject circleBtn;
-    public GameObject squareBtn;
-    public GameObject customBtn;
     public Paintable paintable;
     public GameObject mainBtn;
     public GameObject singleDominoBtn;
@@ -54,46 +51,65 @@ public class MainController : MonoBehaviour
     public GameObject dominoSmall;
     public GameObject dominoBig;
 
+
     //public PlaneDiscoveryGuide discoveryGuide;
     public GameObject mainCanvas;
-
+    public MainUI mainUI;
+    public ScrollViewSnap scrollViewSnap;
+    public UndoRedoManager _undoRedoManager;
     [Range(0, 255)]
     float dim = 100;
     Color dimWhite;
     // Start is called before the first frame update
     void Start()
     {
+        Application.targetFrameRate = 60;
 
-        PlayerPrefs.DeleteAll();
-
-        dim = 125;
+        PlayerPrefs.DeleteKey("ColorID");
+        //PlayerPrefs.DeleteAll();
+        if (mainUI == null)
+        {
+            mainUI = FindObjectOfType<MainUI>();
+        }
+        dim = 150;
         dimWhite = new Color(1f, 1f, 1f, dim / 255);
-        coloringBtn.GetComponent<Image>().color = dimWhite;
-        eraseBtn.GetComponent<Image>().color = dimWhite;
-        toppleBtn.GetComponent<Image>().color = dimWhite;
-        //dominoARController.enabled = false;
+        //mainUI.ButtonSingleDomino.GetComponent<Image>().color = Color.white;
         balloonReticle.SetActive(false);
         //Placement();
-        StartCoroutine(setPlanesGuideUi());
+        //StartCoroutine(setPlanesGuideUi());
+        ButtonTopple.GetComponent<Image>().color = dimWhite;
+        _undoRedoManager = FindObjectOfType<UndoRedoManager>();
     }
 
     IEnumerator setPlanesGuideUi()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
         Placement();
-        //discoveryGuide.isUIEnabled = false;
-        //mainCanvas.SetActive(false);
+    }
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
     }
 
+    private void Update()
+    {
+        if (IsPointerOverUIObject())
+        {
+            return;
+        }
+    }
 
     public void Placement()
     {
-
         if (reticle.activeSelf && !isPlacementBig)
         {
             reticle.SetActive(false);
             isPlacement = false;
-            placementBtn.GetComponent<Image>().color = dimWhite;
+            mainUI.ChangeButtonBG(mainUI.ButtonSingleDomino, ButtonBGColor.Clear);
         }
         else
         {
@@ -103,13 +119,7 @@ public class MainController : MonoBehaviour
             taptoForce.enabled = false;
             isPlacement = true;
 
-            placementBtn.GetComponent<Image>().color = Color.white;
-            coloringBtn.GetComponent<Image>().color = dimWhite;
-            eraseBtn.GetComponent<Image>().color = dimWhite;
-            toppleBtn.GetComponent<Image>().color = dimWhite;
-
-
-            //dominoARController.enabled = false;
+            mainUI.ChangeButtonBG(mainUI.ButtonSingleDomino, ButtonBGColor.White);
             balloonReticle.SetActive(false);
             GetComponent<Paintable>().enabled = false;
         }
@@ -119,12 +129,11 @@ public class MainController : MonoBehaviour
 
     public void Placement_Big()
     {
-
         if (reticle.activeSelf &&!isPlacement)
         {
             reticle.SetActive(false);
             isPlacementBig = false;
-            placementBtn.GetComponent<Image>().color = dimWhite;
+            mainUI.ChangeButtonBG(mainUI.ButtonJumboDomino, ButtonBGColor.Clear);
         }
         else
         {
@@ -134,12 +143,32 @@ public class MainController : MonoBehaviour
             taptoForce.enabled = false;
             isPlacementBig = true;
 
-            placementBtn.GetComponent<Image>().color = Color.white;
-            coloringBtn.GetComponent<Image>().color = dimWhite;
-            eraseBtn.GetComponent<Image>().color = dimWhite;
-            toppleBtn.GetComponent<Image>().color = dimWhite;
+            mainUI.ChangeButtonBG(mainUI.ButtonJumboDomino, ButtonBGColor.White);
 
-            //dominoARController.enabled = false;
+            balloonReticle.SetActive(false);
+            GetComponent<Paintable>().enabled = false;
+        }
+
+    }
+    public void Placement_Big(bool status)
+    {
+        if (!status)
+        {
+            reticle.SetActive(false);
+            isPlacementBig = false;
+            mainUI.ChangeButtonBG(mainUI.ButtonJumboDomino, ButtonBGColor.Clear);
+        }
+        else
+        {
+            reticle.SetActive(true);
+            reticle.GetComponent<DominoPlacing>().prefab = dominoBig;
+            deleteDomino.enabled = false;
+            taptoForce.enabled = false;
+            isPlacementBig = true;
+            isPlacement = false;
+
+            mainUI.ChangeButtonBG(mainUI.ButtonJumboDomino, ButtonBGColor.White);
+
             balloonReticle.SetActive(false);
             GetComponent<Paintable>().enabled = false;
         }
@@ -149,26 +178,23 @@ public class MainController : MonoBehaviour
 
     public void Placement(bool status)
     {
-
         if (!status)
         {
             reticle.SetActive(false);
-            //singleDominoBtn.GetComponent<Image>().sprite = singleDominoBtnSmall;
-            placementBtn.GetComponent<Image>().color = Color.white;
+            mainUI.ChangeButtonBG(mainUI.ButtonSingleDomino, ButtonBGColor.Clear);
         }
         else
         {
             reticle.SetActive(true);
+            reticle.GetComponent<DominoPlacing>().prefab = dominoSmall;
             deleteDomino.enabled = false;
             taptoForce.enabled = false;
+            isPlacement = true;
+            isPlacementBig = false;
 
-            placementBtn.GetComponent<Image>().color = Color.white;
-            coloringBtn.GetComponent<Image>().color = dimWhite;
-            eraseBtn.GetComponent<Image>().color = dimWhite;
-            toppleBtn.GetComponent<Image>().color = dimWhite;
-
-            //dominoARController.enabled = false;
+            mainUI.ChangeButtonBG(mainUI.ButtonSingleDomino, ButtonBGColor.White);
             balloonReticle.SetActive(false);
+            GetComponent<Paintable>().enabled = false;
         }
 
     }
@@ -188,17 +214,10 @@ public class MainController : MonoBehaviour
         if (coloringPanel.activeSelf)
         {
             coloringPanel.SetActive(false);
-            //reticle.SetActive(true);
-            //placementBtn.SetActive(true);
-            eraseBtn.SetActive(true);
-            toppleBtn.SetActive(true);
+            mainUI.ButtonErase.SetActive(true);
+            ButtonTopple.SetActive(true);
             coloringBtn.SetActive(true);
             uiManager.stateColorPicker = false;
-
-            placementBtn.GetComponent<Image>().color = Color.white;
-            coloringBtn.GetComponent<Image>().color = dimWhite;
-            eraseBtn.GetComponent<Image>().color = dimWhite;
-            toppleBtn.GetComponent<Image>().color = dimWhite;
         }
         else
         {
@@ -207,17 +226,6 @@ public class MainController : MonoBehaviour
             taptoForce.enabled = false;
             reticle.SetActive(false);
 
-
-            placementBtn.GetComponent<Image>().color = dimWhite;
-            coloringBtn.GetComponent<Image>().color = Color.white;
-            eraseBtn.GetComponent<Image>().color = dimWhite;
-            toppleBtn.GetComponent<Image>().color = dimWhite;
-
-
-            //placementBtn.SetActive(false);
-            //eraseBtn.SetActive(false);
-            //coloringBtn.SetActive(false);
-            // toppleBtn.SetActive(false);
         }
     }
 
@@ -226,36 +234,53 @@ public class MainController : MonoBehaviour
         reticle.GetComponent<DominoPlacing>().colorID = colorID;
         colorIndicator.sprite = colors[colorID];
         PlayerPrefs.SetInt("ColorID", colorID);
-        Coloring();
+        //Coloring();
     }
 
+    int clickCounter = 0;
     public void Erasing()
     {
-        if (deleteDomino.isActiveAndEnabled)
-        {
-            deleteDomino.enabled = false;
+        //if (deleteDomino.isActiveAndEnabled)
+        //{
+        //    deleteDomino.enabled = false;
 
-            eraseBtn.GetComponent<Image>().color = dimWhite;
-        }
-        else
-        {
+        //    mainUI.ChangeButtonBG(mainUI.ButtonErase, ButtonBGColor.Clear);
+        //}
+        //else
+        //{
             deleteDomino.enabled = true;
             reticle.SetActive(false);
+        //ButtonTopple.SetActive(false);
+        //coloringBtn.SetActive(false);
 
-            placementBtn.GetComponent<Image>().color = dimWhite;
-            coloringBtn.GetComponent<Image>().color = dimWhite;
-            toppleBtn.GetComponent<Image>().color = dimWhite;
-            eraseBtn.GetComponent<Image>().color = Color.white;
+            mainUI.ChangeButtonBG(mainUI.ButtonErase, ButtonBGColor.White);
             if (coloringPanel.activeSelf)
             {
                 uiManager.toggleColorPicker(colors[0]);
             }
 
             //dominoARController.enabled = false;
-            balloonReticle.SetActive(false);
-        }
-    }
+            //if (PlayerPrefs.GetInt("RemoveInfo") == 1)
+            //{
+            //    PlayerPrefs.SetInt("RemoveInfo", 69);
+              
+            //}
 
+        if (clickCounter == 1)
+        {
+            StartCoroutine(SwitchOffRemoveInfo());
+        }
+
+        clickCounter++;
+        //}
+    }
+    IEnumerator SwitchOffRemoveInfo()
+    {
+        yield return new WaitForSeconds(0.75f);
+        remove_info.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        remove_info.SetActive(false);
+    }
 
     public void EraseLongPress()
     {
@@ -271,6 +296,8 @@ public class MainController : MonoBehaviour
             dominos.RemoveAt(i);
             i--;
         }
+        _undoRedoManager.undoBtn.GetComponent<Button>().interactable = false;
+        _undoRedoManager.redoBtn.GetComponent<Button>().interactable = false;
     }
     public void AddDomino(GameObject domino)
     {
@@ -284,7 +311,9 @@ public class MainController : MonoBehaviour
         if (taptoForce.isActiveAndEnabled)
         {
             taptoForce.enabled = false;
-            toppleBtn.GetComponent<Image>().color = dimWhite;
+            ButtonTopple.GetComponent<Image>().color = dimWhite;
+            //scrollViewSnap.MoveButton(scrollViewSnap.index);
+            //StartCoroutine(scrollViewSnap.MoveToButtonOnStart(scrollViewSnap.index));
         }
         else
         {
@@ -292,33 +321,35 @@ public class MainController : MonoBehaviour
             deleteDomino.enabled = false;
             reticle.SetActive(false);
 
-            placementBtn.GetComponent<Image>().color = dimWhite;
-            coloringBtn.GetComponent<Image>().color = dimWhite;
-            eraseBtn.GetComponent<Image>().color = dimWhite;
-            toppleBtn.GetComponent<Image>().color = Color.white;
-
+            ButtonTopple.GetComponent<Image>().color = Color.white;
 
             dominoARController.enabled = false;
             GetComponent<Paintable>().enabled = false;
+            balloonReticle.SetActive(false);
+            dominoARController.GetComponent<TwoPointSpawner>().RemoveBalloonReticles();
         }
+    }
+
+
+    public void ToppleOff()
+    {
+        taptoForce.enabled = false;
+        ButtonTopple.GetComponent<Image>().color = dimWhite;
     }
 
     public void TogglePainting()
     {
-        if (paintable.isActiveAndEnabled)
-        {
-            paintable.enabled = false;
-            customBtn.GetComponent<Image>().color = dimWhite;
-        }
-        else
-        {
+        //if (paintable.isActiveAndEnabled)
+        //{
+        //    paintable.enabled = false;
+        //    mainUI.ChangeButtonBG(mainUI.ButtonDrawPath, ButtonBGColor.Clear);
+        //}
+        //else
+        //{
             paintable.enabled = true;
-            customBtn.GetComponent<Image>().color = Color.white;
-            //Placement(false);
-
-            //dominoARController.enabled = false;
+            mainUI.ChangeButtonBG(mainUI.ButtonDrawPath, ButtonBGColor.White);
             balloonReticle.SetActive(false);
-        }
+        //}
     }
 
     public void SwitchEverythingOff()
@@ -329,4 +360,5 @@ public class MainController : MonoBehaviour
 
         paintable.enabled = false;
     }
+
 }

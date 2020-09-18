@@ -14,16 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
 public class TransactionData
 {
     public States state;
-    public GameObject _object;
-    public Vector3 objectPosition;
-    public Quaternion objectRotation;
-    public Vector3 objectScale;
+    public List<Domino> _dominos;
+    //public Vector3 objectPosition;
+    //public Quaternion objectRotation;
+    //public Vector3 objectScale;
 
 
     public enum States

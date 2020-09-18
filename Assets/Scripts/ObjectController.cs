@@ -41,7 +41,7 @@ public class ObjectController : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (hit.transform.gameObject.CompareTag("DetectedPlane"))
+                if (hit.transform.gameObject.CompareTag("Plane"))
                 {
                     Instantiate(Domino, hit.point, Quaternion.identity);
 

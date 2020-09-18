@@ -18,6 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Paintable : MonoBehaviour
 {
@@ -32,6 +33,15 @@ public class Paintable : MonoBehaviour
     private Vector3 startPos;
     private Vector3 endPos;
     GameObject prevBrushPoint;
+    private List<Domino> holdDominos = new List<Domino>();
+    public UndoRedoManager _undoRedoManager;
+
+    private void OnDisable()
+    {
+        DeletePrefabs();
+    }
+
+
     // Use this for initialization
     void Start()
     {
@@ -39,11 +49,28 @@ public class Paintable : MonoBehaviour
         {
             mainController = FindObjectOfType<MainController>();
         }
+        if (_undoRedoManager == null)
+        {
+            _undoRedoManager = FindObjectOfType<UndoRedoManager>();
+        }
+    }
+
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (IsPointerOverUIObject())
+        {
+            return;
+        }
 
         if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) || Input.GetMouseButtonDown(0))
         {
@@ -100,6 +127,7 @@ public class Paintable : MonoBehaviour
     {
         GameObject prev=null;
         GameObject curr = null;
+        holdDominos.Clear();
         for (int i = 0; i < cubesList.Count; i++)
         {
             curr = Instantiate(prefabs, cubesList[i].transform.position, Quaternion.identity);
@@ -115,10 +143,21 @@ public class Paintable : MonoBehaviour
                
             }
             prev = curr;
+
+            Domino dominoTemp = new Domino();
+            dominoTemp._dominoObj = prev;
+            dominoTemp._dominoPosition = prev.transform.position;
+            dominoTemp._dominoRotation = prev.transform.rotation;
+            dominoTemp._dominoScale = prev.transform.localScale;
+            holdDominos.Add(dominoTemp);
         }
 
         if (curr != null)
-            curr.transform.rotation = mainController.dominos[mainController.dominos.Count-2].transform.rotation;
+        {
+            curr.transform.rotation = mainController.dominos[mainController.dominos.Count - 2].transform.rotation;
+        }
+
+        _undoRedoManager.LoadData(TransactionData.States.spawned, holdDominos);
         DeletePrefabs();
     }
 
@@ -135,29 +174,4 @@ public class Paintable : MonoBehaviour
         }
     }
 
-    public void Save()
-    {
-        StartCoroutine(CoSave());
-    }
-
-    private IEnumerator CoSave()
-    {
-        //wait for rendering
-        yield return new WaitForEndOfFrame();
-        Debug.Log(Application.dataPath + "/savedImage.png");
-
-        //set active texture
-        RenderTexture.active = RTexture;
-
-        //convert rendering texture to texture2D
-        var texture2D = new Texture2D(RTexture.width, RTexture.height);
-        texture2D.ReadPixels(new Rect(0, 0, RTexture.width, RTexture.height), 0, 0);
-        texture2D.Apply();
-
-        //write data to file
-        var data = texture2D.EncodeToPNG();
-        File.WriteAllBytes(Application.dataPath + "/savedImage.png", data);
-
-
-    }
 }

@@ -21,7 +21,7 @@ using UnityEngine;
 public class SoundController : MonoBehaviour
 {
     AudioSource audioSource;
-
+    bool isPlayed = false;
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -30,8 +30,9 @@ public class SoundController : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
 
-        if (collision.gameObject.CompareTag("Domino"))
+        if (collision.gameObject.CompareTag("Domino") && !isPlayed)
         {
+            isPlayed = true;
             audioSource.Play();
         }
     }

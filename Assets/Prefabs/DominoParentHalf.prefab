@@ -75,6 +75,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
+  _dominoObj: {fileID: 0}
+  _dominoPosition: {x: 0, y: 0, z: 0}
+  _dominoRotation: {x: 0, y: 0, z: 0, w: 0}
+  _dominoScale: {x: 0, y: 0, z: 0}
 --- !u!1 &6175545914863221582
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,7 +96,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &726274956227594505
 Transform:
   m_ObjectHideFlags: 0

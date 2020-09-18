@@ -32,12 +32,15 @@ public class BalloonPlacing : MonoBehaviour
     bool isCorrect = false;
     public float NumberOfSegments;
     public float AlonThePath;
-    public GameObject parent;
-    [HideInInspector]
-    public List<GameObject> pooledObjectUsed = new List<GameObject>();
+    List<GameObject> usedObjects = new List<GameObject>();
+    public MainController _mainController;
     void Start()
     {
         target = Camera.main.transform;
+        if (_mainController == null)
+        {
+            _mainController = FindObjectOfType<MainController>();
+        }
     }
 
     /// <summary>
@@ -53,83 +56,88 @@ public class BalloonPlacing : MonoBehaviour
         return results.Count > 0;
     }
 
+    //float delay = 1f;
     void Update()
     {
+        //delay -= 0.5f;
+        //if (delay < 0)
+        //{
+            //delay = 1f;
 
-        var center = new Vector2(Screen.width * ScreenPosition.x, Screen.height * ScreenPosition.y);
-        Ray mRay = Camera.main.ScreenPointToRay(center);
-        RaycastHit hit;
-        if (Physics.Raycast(mRay, out hit))
-        {
-            if (hit.transform.CompareTag("DetectedPlane") || hit.transform.CompareTag("Domino"))
+            var center = new Vector2(Screen.width * ScreenPosition.x, Screen.height * ScreenPosition.y);
+            Ray mRay = Camera.main.ScreenPointToRay(center);
+            RaycastHit hit;
+            if (Physics.Raycast(mRay, out hit))
             {
-                reticle.transform.position = hit.point;
-                Vector3 targetPostition = new Vector3(target.position.x,
-                               this.transform.position.y,
-                               target.position.z);
-                this.transform.LookAt(targetPostition);
-
-
-                if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0))
+                if (hit.transform.CompareTag("DetectedPlane")/* || hit.transform.CompareTag("Domino")*/)
                 {
+                    reticle.transform.position = hit.point;
+                    Vector3 targetPostition = new Vector3(target.position.x,
+                                   this.transform.position.y,
+                                   target.position.z);
+                    this.transform.LookAt(targetPostition);
 
-                    if (IsPointerOverUIObject())
+
+                    if ((Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended) || Input.GetMouseButtonUp(0))
                     {
-                        return;
+
+                        if (IsPointerOverUIObject())
+                        {
+                            return;
+                        }
+
+
+                        GameObject gameObject = Instantiate(prefab, reticle.transform.position, reticle.transform.rotation);
+                        //print("PPOS " + gameObject.transform.position);
+                        pointSpwaner.points.Add(gameObject.transform);
+                        _mainController.ToppleOff();
+                        count += 1;
+                        //print(count);
+                        if (count == 1)
+                        {
+                            pointSpwaner.PointA = gameObject.transform;
+
+                        }
+                        else if (count == 2)
+                        {
+                            pointSpwaner.PointB = gameObject.transform;
+                            DespawnAll();
+
+                            if (pointSpwaner.isLine)
+                            {
+                                pointSpwaner.DrawLine();
+                            }
+                            else if (pointSpwaner.isCircle)
+                            {
+                                pointSpwaner.DrawCircle();
+                            }
+                            else if (pointSpwaner.isRectangle)
+                            {
+                                pointSpwaner.DrawRectangle();
+                            }
+                        }
                     }
 
-
-                    GameObject gameObject = Instantiate(prefab, reticle.transform.position, reticle.transform.rotation);
-                    print("PPOS " + gameObject.transform.position);
-                    pointSpwaner.points.Add(gameObject.transform);
-                    count += 1;
-                    print(count);
                     if (count == 1)
                     {
-                        pointSpwaner.PointA = gameObject.transform;
-                       
-                    }
-                    else if (count == 2)
-                    {
-                        pointSpwaner.PointB = gameObject.transform;
-                        DespawnAll(pooledObjectUsed);
-                        //objectPool.Despawn();
-
                         if (pointSpwaner.isLine)
                         {
-                            pointSpwaner.DrawLine();
+                            DrawLine(pointSpwaner.PointA, reticle.transform);
                         }
                         else if (pointSpwaner.isCircle)
                         {
-                            pointSpwaner.DrawCircle();
+                            DrawCircle(pointSpwaner.PointA, reticle.transform);
                         }
                         else if (pointSpwaner.isRectangle)
                         {
-                            pointSpwaner.DrawRectangle();
+                            DrawRectangle(pointSpwaner.PointA, reticle.transform);
                         }
+
                     }
                 }
 
-                if (count == 1)
-                {
-                    if (pointSpwaner.isLine)
-                    {
-                        DrawLine(pointSpwaner.PointA, reticle.transform);
-                    }
-                    else if (pointSpwaner.isCircle)
-                    {
-                        DrawCircle(pointSpwaner.PointA, reticle.transform);
-                    }
-                    else if (pointSpwaner.isRectangle)
-                    {
-                        DrawRectangle(pointSpwaner.PointA, reticle.transform);
-                    }
-                    
-                }
             }
-
-        }
-
+        //}
     }
 
 
@@ -141,35 +149,27 @@ public class BalloonPlacing : MonoBehaviour
     public void DrawLine(Transform PointA, Transform PointB)
     {
         //print("This is Line");
-        DespawnAll(pooledObjectUsed);
+       DespawnAll();
         var distance = Vector3.Distance(PointA.position, PointB.position);
         NumberOfSegments = Mathf.Round(distance / 0.12f) + 1;
 
         AlonThePath = 1 / (NumberOfSegments);//% along the path
 
-        for (int i = 0; i < NumberOfSegments; i++)
+        for (int i = 1; i < NumberOfSegments; i++)
         {
 
             Vector3 CreatPosition = PointA.position + (PointB.position - PointA.position) * (AlonThePath * i);
 
-            GameObject domino = ObjectPooler.Instance.Spawn(ghostDomino, Vector3.zero, Quaternion.identity);
-            pooledObjectUsed.Add(domino);
-            //GameObject domino = Instantiate(ghostDomino, Vector3.zero, Quaternion.identity, parent.transform);
+            GameObject domino = ObjectPooler.Instance.Spawn(ghostDomino,Vector3.zero, Quaternion.identity);
             //domino.GetComponent<SwitchOnRandomDomino>().colorID = PlayerPrefs.GetInt("ColorID");
             domino.transform.position = CreatPosition;
             domino.transform.LookAt(PointB);
-
+            usedObjects.Add(domino);
         }
 
         //balloonPlacing.count = 0;
         //Destroy(PointA.gameObject);
         //Destroy(PointB.gameObject);
-    }
-
-    public GameObject Spawn(Vector3 position, Quaternion rotation)
-    {
-
-        return Instantiate(ghostDomino ,position, rotation, transform) as GameObject;
     }
 
     /// <summary>
@@ -179,24 +179,24 @@ public class BalloonPlacing : MonoBehaviour
     /// <param name="PointB">Point on mark the circumference of the circle</param>
     public void DrawCircle(Transform PointA, Transform PointB)
     {
-        DespawnAll(pooledObjectUsed);
+       DespawnAll();
         var radius = Vector3.Distance(PointA.position, PointB.position);
-        print(radius);
+        //print(radius);
         int segments = (int)((2 * Mathf.PI * radius) / 0.12f);
         var angle = 90f;
-        print("Circumference: " + (2 * Mathf.PI * radius));
+        //print("Circumference: " + (2 * Mathf.PI * radius));
         var pointCount = segments; // add extra point to make startpoint and endpoint the same to close the circle
         var points = new Vector3[pointCount];
 
         for (int i = 0; i < pointCount; i++)
         {
             var rad = Mathf.Deg2Rad * (i * 360f / segments);
-            print(rad);
+            //print(rad);
             points[i] = new Vector3((Mathf.Sin(rad) * radius) + PointA.position.x, PointA.position.y, (Mathf.Cos(rad) * radius) + PointA.position.z);
 
             //var domino = Instantiate(ghostDomino);
-            GameObject domino = ObjectPooler.Instance.Spawn(ghostDomino, Vector3.zero, Quaternion.identity);
-            pooledObjectUsed.Add(domino);
+            var domino = ObjectPooler.Instance.Spawn(ghostDomino, Vector3.zero, Quaternion.identity);
+            usedObjects.Add(domino);
             domino.transform.position = points[i];
 
             angle += 360 / segments;
@@ -211,7 +211,7 @@ public class BalloonPlacing : MonoBehaviour
     /// <param name="PointB">End point of the Diagnol</param>
     public void DrawRectangle(Transform PointA, Transform PointB)
     {
-        DespawnAll(pooledObjectUsed);
+       DespawnAll();
 
         pointSpwaner.PointC.position = new Vector3(PointB.position.x, PointA.position.y, PointA.position.z);
         pointSpwaner.PointD.position = new Vector3(PointA.position.x, PointA.position.y, PointB.position.z);
@@ -221,13 +221,13 @@ public class BalloonPlacing : MonoBehaviour
         if (((PointA.position.x < PointB.position.x) && (PointA.position.z > PointB.position.z))
     || ((PointA.position.x > PointB.position.x) && (PointA.position.z < PointB.position.z)))
         {
-            print("Correct Square");
+            //print("Correct Square");
             isCorrect = true;
         }
         else if (((PointA.position.x > PointB.position.x) && (PointA.position.z > PointB.position.z))
             || ((PointA.position.x < PointB.position.x) && (PointA.position.z < PointB.position.z)))
         {
-            print("Wrong Square");
+            //print("Wrong Square");
             isCorrect = false;
         }
 
@@ -264,8 +264,7 @@ public class BalloonPlacing : MonoBehaviour
             Vector3 CreatPosition = PointA.position + (PointB.position - PointA.position) * (AlonThePath * i);
 
             GameObject domino = ObjectPooler.Instance.Spawn(ghostDomino, Vector3.zero, Quaternion.identity);
-            pooledObjectUsed.Add(domino);
-
+            usedObjects.Add(domino);
             domino.transform.position = CreatPosition;
             domino.transform.LookAt(PointB);
 
@@ -348,14 +347,11 @@ public class BalloonPlacing : MonoBehaviour
         }
     }
 
-
-    public void DespawnAll(List<GameObject> usedPool)
+    public void DespawnAll()
     {
-        foreach (var item in usedPool)
+        foreach (var usedObject in usedObjects)
         {
-           ObjectPooler.Instance.Despawn(item);
+            ObjectPooler.Instance.Despawn(usedObject);
         }
-
-        usedPool.Clear();
     }
 }

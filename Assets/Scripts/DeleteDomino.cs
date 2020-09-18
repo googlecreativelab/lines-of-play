@@ -27,7 +27,7 @@ public class DeleteDomino : MonoBehaviour
     Ray ray;
     RaycastHit hit;
     UndoRedoManager _undoRedoManager;
-
+    private List<Domino> holdDominos = new List<Domino>();
     void Start()
     {
         //SetDominoObject();
@@ -51,11 +51,18 @@ public class DeleteDomino : MonoBehaviour
                 }
                 else if (hit.transform.gameObject.CompareTag("Domino"))
                 {
-                 
-                    var temp = hit.transform.gameObject.transform.parent.gameObject;
-                   
-                    temp.SetActive(false);
-                    _undoRedoManager.LoadData(TransactionData.States.deleted, temp, temp.transform.position, temp.transform.rotation, temp.transform.localScale);
+                    holdDominos.Clear();
+                    var dominoDeleted = hit.transform.gameObject.transform.parent.gameObject;
+                    dominoDeleted.SetActive(false);
+
+                    Domino domino = new Domino();
+                    domino._dominoObj = dominoDeleted;
+                    domino._dominoPosition = dominoDeleted.transform.position;
+                    domino._dominoRotation = dominoDeleted.transform.rotation;
+                    domino._dominoScale = dominoDeleted.transform.localScale;
+                    holdDominos.Add(domino);
+
+                    _undoRedoManager.LoadData(TransactionData.States.deleted, holdDominos);
                 }
 
             }

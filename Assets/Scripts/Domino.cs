@@ -21,7 +21,14 @@ using UnityEngine;
 public class Domino : MonoBehaviour
 {
     public int id;
-
+    [HideInInspector]
+    public GameObject _dominoObj;
+    [HideInInspector]
+    public Vector3 _dominoPosition;
+    [HideInInspector]
+    public Quaternion _dominoRotation;
+    [HideInInspector]
+    public Vector3 _dominoScale;
     void Start()
     {
         

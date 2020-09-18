@@ -19,9 +19,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.UI;
 
 public class TwoPointSpawner : MonoBehaviour
 {
+    #region PUBLIC MEMBERS
     public float NumberOfSegments;
     public float AlonThePath;
     public Transform PointA;
@@ -36,12 +38,24 @@ public class TwoPointSpawner : MonoBehaviour
     public bool isCircle = false;
     public bool isRectangle = false;
     public List<Transform> points;
-    DominoARController dominoARController;
     public BalloonPlacing balloonPlacing;
+    //public LeanGameObjectPool objectPool;
     public MainController mainController;
+    public MainUI mainUI;
+    public GameObject reticleBallon;
+    public GameObject reticleGhostDomino;
+    public UndoRedoManager _undoRedoManager;
+
+    public GameObject ButtonLine;
+    public GameObject ButtonCircle;
+    public GameObject ButtonRectangle;
+    #endregion
+
     List<GameObject> firstObjs = new List<GameObject>();
     List<GameObject> lastObjs = new List<GameObject>();
+    private List<Domino> holdDominos = new List<Domino>();
     bool isCorrect = false;
+
     // Update is called once per frame
     void Start()
     {
@@ -50,11 +64,20 @@ public class TwoPointSpawner : MonoBehaviour
         {
             mainController = FindObjectOfType<MainController>();
         }
+        if (mainUI == null)
+        {
+            mainUI = FindObjectOfType<MainUI>();
+        }
+        if (_undoRedoManager == null)
+        {
+            _undoRedoManager = FindObjectOfType<UndoRedoManager>();
+        }
     }
 
     public void DrawLine()
     {
-        print("This is Line");
+        holdDominos.Clear();
+        //print("This is Line");
         var distance = Vector3.Distance(PointA.position, PointB.position); 
         NumberOfSegments = Mathf.Round(distance / 0.12f) + 1; 
         
@@ -71,8 +94,15 @@ public class TwoPointSpawner : MonoBehaviour
             domino.transform.position = CreatPosition;
             domino.transform.LookAt(PointB);
 
+            Domino dominoTemp = new Domino();
+            dominoTemp._dominoObj = domino;
+            dominoTemp._dominoPosition = domino.transform.position;
+            dominoTemp._dominoRotation = domino.transform.rotation;
+            dominoTemp._dominoScale = domino.transform.localScale;
+            holdDominos.Add(dominoTemp);
         }
 
+        _undoRedoManager.LoadData(TransactionData.States.spawned, holdDominos);
         balloonPlacing.count = 0;
         Destroy(PointA.gameObject);
         Destroy(PointB.gameObject);
@@ -81,18 +111,20 @@ public class TwoPointSpawner : MonoBehaviour
 
     public void DrawCircle()
     {
+        holdDominos.Clear();
+
         var radius = Vector3.Distance(PointA.position, PointB.position);
 
         int segments = (int)((2 * Mathf.PI * radius) / 0.12f);
         var angle = 90f;
-        print("Circumference: " + (2 * Mathf.PI * radius));
+        //print("Circumference: " + (2 * Mathf.PI * radius));
         var pointCount = segments; // add extra point to make startpoint and endpoint the same to close the circle
         var points = new Vector3[pointCount];
 
         for (int i = 0; i < pointCount; i++)
         {
             var rad = Mathf.Deg2Rad * (i * 360f / segments);
-            print(rad);
+            //print(rad);
             points[i] = new Vector3((Mathf.Sin(rad) * radius) + PointA.position.x, PointA.position.y, (Mathf.Cos(rad) * radius) + PointA.position.z);
            
             var domino = Instantiate(dominoPrefab);
@@ -102,10 +134,17 @@ public class TwoPointSpawner : MonoBehaviour
 
             angle += 360/segments;
             domino.transform.rotation = Quaternion.Euler(new Vector3(0f, angle, 0f));
+
+            Domino dominoTemp = new Domino();
+            dominoTemp._dominoObj = domino;
+            dominoTemp._dominoPosition = domino.transform.position;
+            dominoTemp._dominoRotation = domino.transform.rotation;
+            dominoTemp._dominoScale = domino.transform.localScale;
+            holdDominos.Add(dominoTemp);
         }
 
 
-
+        _undoRedoManager.LoadData(TransactionData.States.spawned, holdDominos);
         balloonPlacing.count = 0;
         Destroy(PointA.gameObject);
         Destroy(PointB.gameObject);
@@ -115,6 +154,8 @@ public class TwoPointSpawner : MonoBehaviour
     public void DrawRectangle()
     {
 
+        holdDominos.Clear();
+
          PointC.position = new Vector3(PointB.position.x, PointA.position.y, PointA.position.z);
          PointD.position = new Vector3(PointA.position.x, PointA.position.y, PointB.position.z);
         Transform[] corners = { PointA, PointC, PointB, PointD };
@@ -123,13 +164,13 @@ public class TwoPointSpawner : MonoBehaviour
         if (((PointA.position.x < PointB.position.x) && (PointA.position.z > PointB.position.z))
     || ((PointA.position.x > PointB.position.x) && (PointA.position.z < PointB.position.z)))
         {
-            print("Correct Square");
+            //print("Correct Square");
             isCorrect = true;
         }
         else if (((PointA.position.x > PointB.position.x) && (PointA.position.z > PointB.position.z))
             || ((PointA.position.x < PointB.position.x) && (PointA.position.z < PointB.position.z)))
         {
-            print("Wrong Square");
+            //print("Wrong Square");
             isCorrect = false;
         }
 
@@ -147,7 +188,7 @@ public class TwoPointSpawner : MonoBehaviour
         }
 
 
-
+        _undoRedoManager.LoadData(TransactionData.States.spawned, holdDominos);
         //setLookDominos();
         //points.Clear();
         Destroy(PointA.gameObject);
@@ -287,6 +328,12 @@ public class TwoPointSpawner : MonoBehaviour
                 }
 
             }
+            Domino dominoTemp = new Domino();
+            dominoTemp._dominoObj = domino;
+            dominoTemp._dominoPosition = domino.transform.position;
+            dominoTemp._dominoRotation = domino.transform.rotation;
+            dominoTemp._dominoScale = domino.transform.localScale;
+            holdDominos.Add(dominoTemp);
         }
     }
 
@@ -301,32 +348,52 @@ public class TwoPointSpawner : MonoBehaviour
             Destroy(PointB.gameObject);
         }
         points.Clear();
-        balloonPlacing.DespawnAll(balloonPlacing.pooledObjectUsed);
+        balloonPlacing.DespawnAll();
         balloonPlacing.count = 0;
     }
     public void LineToggle()
     {
         RemoveBalloonReticles();
+        //mainUI.MakeButtonBGTransparent();
+        //isLine = !isLine;
         isLine = true;
         isCircle = false;
         isRectangle = false;
         isDefault = false;
+
+        if (isLine)
+        {
+            mainUI.ChangeButtonBG(mainUI.ButtonLine, ButtonBGColor.White);
+        }
+        reticleBallon.SetActive(isLine);
     }  
     public void CircleToggle()
     {
         RemoveBalloonReticles();
         isCircle = true;
+        //isCircle = !isCircle;
         isLine = false;
         isRectangle = false;
         isDefault = false;
+        if (isCircle)
+        {
+            mainUI.ChangeButtonBG(mainUI.ButtonCircle, ButtonBGColor.White);
+        }
+        reticleBallon.SetActive(isCircle);
     }
     public void RectangleToggle()
     {
         RemoveBalloonReticles();
+        isRectangle = true;
+        //isRectangle = !isRectangle;
         isCircle = false;
         isLine = false;
-        isRectangle = true;
         isDefault = false;
+        if (isRectangle)
+        {
+            mainUI.ChangeButtonBG(mainUI.ButtonRectangle, ButtonBGColor.White);
+        }
+        reticleBallon.SetActive(isRectangle);
     }
     public void DefaultToggle()
     {
@@ -335,5 +402,8 @@ public class TwoPointSpawner : MonoBehaviour
         isLine = false;
         isRectangle = false;
         isDefault = true;
+
+        reticleBallon.SetActive(!isDefault);
     }
 }
+

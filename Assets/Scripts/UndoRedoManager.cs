@@ -18,6 +18,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UndoRedoManager : MonoBehaviour
 {
@@ -30,16 +31,17 @@ public class UndoRedoManager : MonoBehaviour
 
     void Start()
     {
-       
+        undoBtn.GetComponent<Button>().interactable = false;
+        redoBtn.GetComponent<Button>().interactable = false;
     }
 
 
     public void SwitchOffOtherFunctionality()
     {
-        GetComponent<MainController>().reticle.SetActive(true);
-        GetComponent<MainController>().deleteDomino.enabled = true;
-        GetComponent<MainController>().Placement();
-        GetComponent<MainController>().Erasing();
+        //GetComponent<MainController>().reticle.SetActive(true);
+        //GetComponent<MainController>().deleteDomino.enabled = true;
+        //GetComponent<MainController>().Placement();
+        //GetComponent<MainController>().Erasing();
     }
 
     public void Undo()
@@ -49,7 +51,11 @@ public class UndoRedoManager : MonoBehaviour
         {
             //delete
             print("delete-Undo");
-            UndoStack._object.SetActive(false);
+            foreach (var item in UndoStack._dominos)
+            {
+                item._dominoObj.SetActive(false);
+            }
+            //UndoStack._object.SetActive(false);
             redoStack = UndoStack;
             redoStack.state = TransactionData.States.deleted;
         }
@@ -57,13 +63,17 @@ public class UndoRedoManager : MonoBehaviour
         {
             //Spawn
             print("Spwan-Undo");
-            UndoStack._object.SetActive(true);
+            foreach (var item in UndoStack._dominos)
+            {
+                item._dominoObj.SetActive(true);
+            }
+            //UndoStack._object.SetActive(true);
             redoStack = UndoStack;
             redoStack.state = TransactionData.States.spawned;
         }
 
-        undoBtn.SetActive(false);
-        redoBtn.SetActive(true);
+        undoBtn.GetComponent<Button>().interactable = false;
+        redoBtn.GetComponent<Button>().interactable = true;
     }
 
     public void Redo()
@@ -71,45 +81,74 @@ public class UndoRedoManager : MonoBehaviour
         SwitchOffOtherFunctionality();
         if (redoStack.state == TransactionData.States.deleted)
         {
-            redoStack._object.SetActive(true);
+            foreach (var item in UndoStack._dominos)
+            {
+                item._dominoObj.SetActive(true);
+            }
+
+            //redoStack._object.SetActive(true);
             UndoStack = redoStack;
             UndoStack.state = TransactionData.States.spawned;
         }
 
         else if (redoStack.state == TransactionData.States.spawned)
         {
+
+            foreach (var item in UndoStack._dominos)
+            {
+                item._dominoObj.SetActive(false);
+            }
             //Spawn
-            redoStack._object.SetActive(false);
+            //redoStack._object.SetActive(false);
             UndoStack = redoStack;
             UndoStack.state = TransactionData.States.deleted;
         }
-        undoBtn.SetActive(true);
-        redoBtn.SetActive(false);
+        undoBtn.GetComponent<Button>().interactable = true;
+        redoBtn.GetComponent<Button>().interactable = false;
     }
 
     public void DeleteItem()
     {
+        foreach (var item in UndoStack._dominos)
+        {
+            item._dominoObj.SetActive(false);
+        }
+
         //delete
-        UndoStack._object.SetActive(false);
+        //UndoStack._object.SetActive(false);
         redoStack = UndoStack;
         redoStack.state = TransactionData.States.deleted;
     }
 
     public void PlaceItem()
     {
-        UndoStack._object.SetActive(true);
+        foreach (var item in UndoStack._dominos)
+        {
+            item._dominoObj.SetActive(true);
+        }
+        //UndoStack._object.SetActive(true);
         redoStack = UndoStack;
         redoStack.state = TransactionData.States.spawned;
     }
 
-    public void LoadData(TransactionData.States state, GameObject gameObject, Vector3 position, Quaternion rotation, Vector3 scale)
+    //public void LoadData(TransactionData.States state, GameObject gameObject, Vector3 position, Quaternion rotation, Vector3 scale)
+    //{
+    //    UndoStack.state = state;
+    //    UndoStack._object = gameObject;
+    //    UndoStack.objectPosition = position;
+    //    UndoStack.objectRotation = rotation;
+    //    UndoStack.objectScale = scale;
+
+    //    undoBtn.GetComponent<Button>().interactable = true;
+    //}
+    public void LoadData(TransactionData.States state, List<Domino> dominos)
     {
         UndoStack.state = state;
-        UndoStack._object = gameObject;
-        UndoStack.objectPosition = position;
-        UndoStack.objectRotation = rotation;
-        UndoStack.objectScale = scale;
+        UndoStack._dominos = dominos;
+        //UndoStack.objectPosition = position;
+        //UndoStack.objectRotation = rotation;
+        //UndoStack.objectScale = scale;
 
-        undoBtn.SetActive(true);
+        undoBtn.GetComponent<Button>().interactable = true;
     }
 }
